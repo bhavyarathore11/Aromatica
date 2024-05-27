@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Aromatica Perfume Shop</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>Aromatica</h1>
+            <nav>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#products">Products</a></li>
+                    <li><a href="#about">About Us</a></li>
+                    <li><a href="#login">Login</a></li>
+                    <li><a href="#cart">Cart</a></li>
+                    <li><a href="#my-account">My Account</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Home Section -->
+    <section id="home">
+        <h2>Welcome to Aromatica Perfume Shop</h2>
+        <p>Your one-stop destination for high-quality fragrances.</p>
+    </section>
+
+    <!-- Products Section -->
+    <section id="products" class="product-page">
+        <h2>Our Products</h2>
+        <div class="product">
+            <img src="coco-mademoiselle-perfume-chanel-1675113242.png" alt="Coco-mademoiselle womens perfume">
+            <h2>Coco-mademoiselle womens perfume</h2>
+            <p>Exquisite fragrance for any occasion.</p>
+            <p class="price">$50</p>
+            <a href="#cart" class="buy-button" onclick="addToCart('Coco-mademoiselle womens perfume', 50)">Add to Cart</a>
+        </div>
+        <!-- Additional products go here, similar to the above structure -->
+    </section>
+
+    <!-- About Us Section -->
+    <section id="about" class="about-us">
+        <h2>About Aromatica Perfume Shop</h2>
+        <p>Welcome to Aromatica Perfume Shop, your one-stop destination for high-quality fragrances. We are dedicated to providing our customers with a wide selection of perfumes that captivate the senses and leave a lasting impression. Our mission is to help you discover the perfect scent that suits your unique style and personality.</p>
+
+        <h3>Our Story</h3>
+        <p>Founded in 2023, Aromatica Perfume Shop has been a trusted name in the fragrance industry form now. We have built our reputation on offering a curated collection of perfumes from renowned brands and designers. Our team of experts is passionate about helping you find the ideal fragrance for every occasion.</p>
+
+        <h3>Why Choose Us?</h3>
+        <ul>
+            <li>Exceptional customer service</li>
+            <li>Wide range of perfume brands</li>
+            <li>Expert advice and recommendations</li>
+            <li>Secure and easy online shopping experience</li>
+        </ul>
+    </section>
+
+    <!-- Login Section -->
+    <section id="login" class="login-section">
+        <h2>Login</h2>
+        <form id="loginForm" onsubmit="return loginUser()">
+            <label for="username">Username:</label>
+            <input type="text" id="username" required>
+            <br>
+            <label for="password">Password:</label>
+            <input type="password" id="password" required>
+            <br>
+            <button type="submit">Login</button>
+        </form>
+
+        <h2>Create Account</h2>
+        <form id="createAccountForm" onsubmit="return createAccount()">
+            <label for="newUsername">New Username:</label>
+            <input type="text" id="newUsername" required>
+            <br>
+            <label for="newPassword">New Password:</label>
+            <input type="password" id="newPassword" required>
+            <br>
+            <button type="submit">Create Account</button>
+        </form>
+    </section>
+
+    <!-- Cart Section -->
+    <section id="cart" class="cart">
+        <h2>Your Shopping Cart</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="cartTable"></tbody>
+        </table>
+        <p id="cartTotal">Total: $0</p>
+        <button class="checkout-button" onclick="checkout()">Checkout</button>
+    </section>
+
+    <!-- My Account Section -->
+    <section id="my-account" class="my-account">
+        <h2>Welcome, <span id="user-name"></span></h2>
+        <p>Email: <span id="user-email"></span></p>
+
+        <h3>My Account Links</h3>
+        <ul>
+            <li><a href="#my-orders">My Orders</a></li>
+            <li><a href="#wishlist">Wishlist</a></li>
+            <li><a href="#track-my-order">Track My Order</a></li>
+        </ul>
+    </section>
+
+    <footer>
+        <p>&copy; 2023 Perfume Shop. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Cart functionality
+        const cart = [];
+        const cartTable = document.getElementById('cartTable');
+        const cartTotal = document.getElementById('cartTotal');
+
+        function addToCart(productName, price) {
+            const item = {
+                name: productName,
+                price: price,
+                quantity: 1
+            };
+
+            const existingItemIndex = cart.findIndex((item) => item.name === productName);
+
+            if (existingItemIndex !== -1) {
+                cart[existingItemIndex].quantity++;
+            } else {
+                cart.push(item);
+            }
+
+            displayCart();
+        }
+
+        function displayCart() {
+            cartTable.innerHTML = ''; // Clear the current cart display
+
+            let total = 0;
+
+            cart.forEach((item, index) => {
+                const row = cartTable.insertRow();
+                const nameCell = row.insertCell(0);
+                const priceCell = row.insertCell(1);
+                const quantityCell = row.insertCell(2);
+                const totalCell = row.insertCell(3);
+                const actionCell = row.insertCell(4);
+
+                nameCell.textContent = item.name;
+                priceCell.textContent = `$${item.price}`;
+                quantityCell.textContent = item.quantity;
+                const itemTotal = item.price * item.quantity;
+                totalCell.textContent = `$${itemTotal}`;
+                total += itemTotal;
+
+                const removeButton = document.createElement('button');
+                removeButton.textContent = 'Remove';
+                removeButton.addEventListener('click', () => removeFromCart(index));
+                actionCell.appendChild(removeButton);
+            });
+
+            cartTotal.textContent = `Total: $${total}`;
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            displayCart();
+        }
+
+        function checkout() {
+            alert('Thank you for your purchase! Your order has been placed.');
+            cart.length = 0;
+            displayCart();
+        }
+
+        // Login and account creation functionality
+        const users = [
+            { username: "bhavyarathore", password: "1234567" },
+            { username: "aadhyarathore", password: "6789101" }
+        ];
+
+        function loginUser() {
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+            const user = users.find(u => u.username === username && u.password === password);
+
+            if (user) {
+                alert("Login successful");
+                // Redirect or update user information on the page
+                document.getElementById("user-name").textContent = username;
+                document.getElementById("user-email").textContent = `${username}@example.com`;
+                return true; // Allow form submission
+            } else {
+                alert("Login failed. Please check your username and password.");
+                return false; // Prevent form submission
+            }
+        }
+
+        function createAccount() {
+            const newUsername = document.getElementById("newUsername").value;
+            const newPassword = document.getElementById("newPassword").value;
+
+            if (users.some(u => u.username === newUsername)) {
+                alert("Username is already taken. Please choose another.");
+                return false; // Prevent form submission
+            } else {
+                users.push({ username: newUsername, password: newPassword });
+                alert("Account created successfully. You can now log in.");
+                return true; // Allow form submission
+            }
+        }
+    </script>
+</body>
+</html>
